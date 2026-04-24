@@ -3,6 +3,7 @@ import { useState } from "react";
 export const FormApi = () => {
   const [tema, setTema] = useState("");
   const [ideas, setIdeas] = useState(""); // Variable en plural
+  const [tiempo, setTiempo] = useState(null); // Variable para el tiempo
   const [cargando, setCargando] = useState(false);
 
   const generarIdeas = async () => {
@@ -18,8 +19,9 @@ export const FormApi = () => {
         body: JSON.stringify({ tema }),
       });
       const data = await response.json();
-      const texto = data[0]?.generated_text || "Error";
+      const texto = data.data[0]?.generated_text || "Error";
       setIdeas(texto || "No se generó ninguna idea.");
+      setTiempo(data.tiempo_ms); // Guardar el tiempo de respuesta
     } catch (error) {
       console.error(error);
       setIdeas("Error al conectar con la IA");
@@ -30,9 +32,16 @@ export const FormApi = () => {
   return (
     <main className="p-8 max-w-7xl mx-auto">
       <section className="p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">
-          Generador de Ideas con IA
-        </h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            Generador de Ideas con IA
+          </h1>
+          {tiempo && (
+            <span className="text-sm py-1 px-4 border rounded-full border-gray-500 bg-gray-200 text-gray-900">
+              Tiempo de respuesta: {(tiempo / 1000).toFixed(2)} s
+            </span>
+          )}
+        </div>
 
         <div className="flex flex-col gap-3">
           <input

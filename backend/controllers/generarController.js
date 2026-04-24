@@ -1,4 +1,5 @@
 import Groq from "groq-sdk";
+import { performance } from "perf_hooks";
 
 //Se crea una instancia de Groq utilizando la clave API almacenada en las variables de entorno. Esta instancia se utilizará para interactuar con la API de Groq y generar ideas creativas basadas en el tema proporcionado por el usuario.
 const groq = new Groq({
@@ -10,12 +11,14 @@ export const generarIdea = async (req, res) => {
   //Se extrae el tema del proyecto del cuerpo de la solicitud (req.body) enviado por el cliente.
   const { tema } = req.body;
 
+  const inicio = performance.now();
+
   try {
     //Se utiliza la instancia de Groq para crear una solicitud de generación de texto.
     const completion = await groq.chat.completions.create({
       //Se especifica el modelo a utilizar (en este caso, "llama-3.1-8b-instant")
       model: "llama-3.1-8b-instant",
-      //El mensaje que se le envía al modelo (que incluye el tema del proyecto) 
+      //El mensaje que se le envía al modelo (que incluye el tema del proyecto)
       messages: [
         {
           role: "user",
@@ -28,12 +31,22 @@ export const generarIdea = async (req, res) => {
       temperature: 0.8,
     });
 
+    const fin = performance.now();
+    const tiempoMs = fin - inicio;
+
     //Se extrae el texto generado de la respuesta de Groq.
     const texto = completion.choices[0].message.content;
+
+    //Se imprime en la consola el tiempo que tomó generar la respuesta utilizando Groq.
+    console.log("Tiempo IA:", (tiempoMs / 1000).toFixed(2), "segundos");
+
     console.log("Respuesta Groq:", texto);
 
-    //Se envía la respuesta generada al cliente en formato JSON.
-    res.json([{ generated_text: texto }]);
+    //Se envía la respuesta generada y el tiempo de generación al cliente en formato JSON.
+    res.json({
+      data: [{ generated_text: texto }],
+      tiempo_ms: tiempoMs,
+    });
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).json({ error: error.message });
