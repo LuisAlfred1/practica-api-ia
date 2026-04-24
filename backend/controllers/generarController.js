@@ -22,7 +22,46 @@ export const generarIdea = async (req, res) => {
       messages: [
         {
           role: "user",
-          content: `Genera una idea creativa y detallada para un proyecto de: ${tema}. Responde en español.`,
+          content: `
+Actúa como un experto en innovación y desarrollo de software con experiencia en creación de startups tecnológicas.
+
+Tu tarea es generar una idea creativa, original y detallada para un proyecto basado en el siguiente tema: "${tema}".
+
+La respuesta debe cumplir con lo siguiente:
+
+1. Nombre del proyecto:
+   - Un nombre atractivo y fácil de recordar.
+
+2. Descripción general:
+   - Explica claramente en qué consiste el proyecto.
+   - Qué problema resuelve y por qué es importante.
+
+3. Público objetivo:
+   - Describe a quién va dirigido (edad, intereses, necesidades).
+
+4. Funcionalidades principales:
+   - Lista al menos 4 funcionalidades clave.
+   - Explica brevemente cada una.
+
+5. Tecnologías sugeridas:
+   - Menciona posibles tecnologías (frontend, backend, base de datos, IA si aplica).
+
+6. Modelo de monetización:
+   - Cómo podría generar ingresos (suscripción, freemium, anuncios, etc).
+
+7. Diferenciador:
+   - Qué hace único este proyecto frente a otros.
+
+8. Ejemplo de uso:
+   - Describe un escenario real donde un usuario utilizaría esta aplicación.
+
+Reglas:
+- Responde en español.
+- Usa un lenguaje claro pero profesional.
+- Sé creativo pero realista.
+- No repitas información innecesaria.
+- Mantén una estructura ordenada con subtítulos.
+`,
         },
       ],
       //número máximo de tokens a generar
